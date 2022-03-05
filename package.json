@@ -1,0 +1,22 @@
+{
+  "name": "@jasongilbertuk/control-table",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jason-gilbert-uk/control-table.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jason-gilbert-uk/control-table/issues"
+  },
+  "homepage": "https://github.com/jason-gilbert-uk/control-table#readme",
+  "dependencies": {
+    "@jasongilbertuk/dynamo-helper": "^1.0.4"
+  }
+}
