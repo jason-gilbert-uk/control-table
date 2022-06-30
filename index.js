@@ -121,7 +121,7 @@ async function extractTescoConfig() {
             var title = $(this).find('.list-item-single-line').text()
             var urlsub = $(this).find('a').attr('href');
             let category = {title: title,url:url, state:'ready',nextInChain:''};
-            config.categories.push(category)
+            config.urls.push(category)
         })
         return config;
 
