@@ -93,6 +93,41 @@ async function writeItemToControlTable(dbTableName,item) {
     }
 }
 
+//----------------------------------------------------------------------------
+// function: extractTescoConfig()
+// Extracts the main config from the main tesco groceries page.
+// Throws exception on unexpected errors.
+//----------------------------------------------------------------------------
+async function extractTescoConfig() {
+    const url = 'https://www.tesco.com/groceries/en-GB/shop'
+    try {
+        var response = await axios.get(url);
+    }
+    catch (error) {
+        console.log('*** received an error requesting url ',url);
+        console.log(error);
+        throw error;
+    }
+
+    let config = { urls: []}
+
+    try {
+        const html = response.data;
+        const $ = cheerio.load(html)
+        var current = $('.current .list .list-item',html).each(function(){
+            var title = $(this).find('.list-item-single-line').text()
+            var urlsub = $(this).find('a').attr('href');
+            let category = {title: title,url:url, state:'ready',nextInChain:''};
+            config.categories.push(category)
+        })
+        return config;
+
+    } catch (error) {
+        console.log('*** received an error extracting config ',url);
+        console.log(error);
+        throw error;
+    }
+}
 
 //----------------------------------------------------------------------------
 // function: resetConfig(tableName)
@@ -100,21 +135,8 @@ async function writeItemToControlTable(dbTableName,item) {
 // Throws exception on unexpected errors.
 //----------------------------------------------------------------------------
 async function resetConfig(dbTableName) {
-    const config = {
-        urls : [{url:'https://www.tesco.com/groceries/en-GB/shop/fresh-food/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/bakery/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/frozen-food/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/food-cupboard/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/drinks/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/baby/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/health-and-beauty/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/pets/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/household/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/home-and-ents/all',state:"ready",nextInChain:""},
-                {url:'https://www.tesco.com/groceries/en-GB/shop/easter/all',state:"ready",nextInChain:""},
-            ]
-        }
-    var item = {id: 'scrapingconfig', config: config}
+    const config = await extractTescoConfig();
+    var item = {id: 'scrapingconfig', config: config};
     try {
         var response = await writeItemToControlTable(dbTableName,item);
         return response;
