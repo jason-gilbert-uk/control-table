@@ -1,6 +1,9 @@
 const AWS = require('aws-sdk')
+const axios = require('axios')
+const cheerio = require('cheerio')
 AWS.config.update({region:'eu-west-1'});
 const docClient = new AWS.DynamoDB.DocumentClient();
+
 
 //----------------------------------------------------------------------------
 // function: checkTableExists(tableName)
