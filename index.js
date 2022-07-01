@@ -120,7 +120,13 @@ async function extractTescoConfig() {
         var current = $('.current .list .list-item',html).each(function(){
             var title = $(this).find('.list-item-single-line').text()
             var urlsub = $(this).find('a').attr('href');
-            let category = {title: title,url:urlsub, state:'ready',nextInChain:''};
+            var index = urlsub.indexOf('?')
+            var trimmedUrl = urlsub.substring(0,index);
+            console.log(trimmedUrl)
+            var fullUrl = "https://www.tesco.com" + trimmedUrl + "/all"
+            console.log(fullUrl);
+
+            let category = {title: title,url: fullUrl, state:'ready',nextInChain:''};
             config.urls.push(category)
         })
         return config;
