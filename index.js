@@ -119,6 +119,8 @@ async function extractTescoConfig() {
         const $ = cheerio.load(html)
         var current = $('.current .list .list-item',html).each(function(){
             var title = $(this).find('.list-item-single-line').text()
+            if (title === 'Inspiration & Events')
+                return;
             var urlsub = $(this).find('a').attr('href');
             var index = urlsub.indexOf('?')
             var trimmedUrl = urlsub.substring(0,index);
